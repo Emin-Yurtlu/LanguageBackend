@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 // e posta işlemleri  ıcın stmp servisine   ihtiyacımız var bunu bagımlılıkları tesrıne cevırerek yapacagız(Dependency Inversion)
 // bunu neden ınterface  Dependency Inversion yapıyoruz cunku   bız sadec smtp ıle maıl gondermek ıstemeyebılırız yarın baska servıs ıle gondermek ıstedıgımızde 
 // sadece servis kısmını degıstırırız yanı Dependency Inversion ıle nasıl gonderıldıgı degıl  gonderılme ısını cozmus oluruz 
+//"E-posta gönder" sözleşmesidir, nasıl gönderileceğini bilmez
 namespace LanguageBackend.Application.Interfaces
 {
     public  interface IEmailService

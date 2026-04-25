@@ -17,12 +17,28 @@ namespace LanguageBackend.Persistence.Context
         {
 
         }
-        
-   
-    protected override void OnModelCreating(ModelBuilder builder)
+        public DbSet<UserWord> UserWords { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             
+            base.OnModelCreating(builder);
+
+
+            // UserWord → AppUser ilişkisi
+            builder.Entity<UserWord>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+
+                entity.HasOne(x => x.User)
+                      .WithMany()
+                      .HasForeignKey(x => x.UserId)
+                      .OnDelete(DeleteBehavior.Cascade); // kullanıcı silinince kelimeleri de sil
+            });
+
         }
+
     }
-}
+    }
+
 

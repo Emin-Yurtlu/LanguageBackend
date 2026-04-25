@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LanguageBackend.Application\LanguageBackend.Application.csproj" />
-    <ProjectReference Include="..\LanguageBackend.Persistence\LanguageBackend.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

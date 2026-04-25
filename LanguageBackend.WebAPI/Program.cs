@@ -2,7 +2,6 @@ using LanguageBackend.Application.Features.Auth.Commands.Register;
 using LanguageBackend.Application.Interfaces;
 using LanguageBackend.Domain.Entities;
 using LanguageBackend.Infrastructure.Services;
-
 using LanguageBackend.Persistence.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+
+using LanguageBackend.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,10 +67,13 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers(); // end poıntler controllar uzerınden yazılacak 
 
-
+builder.Services.AddScoped<IUserWordRepository, UserWordRepository>();
 
 builder.Services.AddEndpointsApiExplorer();// swager aktıf edıldı 
-builder.Services.AddSwaggerGen();// swager aktıf edıldı 
+
+// Gemini servisi HttpClient ile kaydedildi
+builder.Services.AddHttpClient<IGeminiService, GeminiService>();
+
 
 //4. Swagger'a JWT Yetkilendirme Butonu Ekleme
 builder.Services.AddSwaggerGen(c =>

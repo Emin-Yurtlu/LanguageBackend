@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace LanguageBackend.Application.Interfaces
 {
     // bu ınterfacemızde e maili dogrulanmıs  dogrulanmıs kullanıcı ıcın gırıs yapmaya yarayan bır token uretecegız 
-    public  interface ITokenService
+    //JWT token üret" sözleşmesi
+    public interface ITokenService
     {
         string CreateToken(AppUser user);
     }
