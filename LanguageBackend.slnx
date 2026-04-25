@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="LanguageBackend.Application/LanguageBackend.Application.csproj" />
+  <Project Path="LanguageBackend.Domain/LanguageBackend.Domain.csproj" />
+  <Project Path="LanguageBackend.Infrastructure/LanguageBackend.Infrastructure.csproj" />
+  <Project Path="LanguageBackend.Persistence/LanguageBackend.Persistence.csproj" />
+  <Project Path="LanguageBackend.WebAPI/LanguageBackend.WebAPI.csproj" />
+</Solution>
