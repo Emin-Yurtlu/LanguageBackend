@@ -1,7 +1,7 @@
-﻿using LanguageBackend.Application.Features.Auth.Commands.DeleteUser;
+﻿
 using LanguageBackend.Application.Features.Auth.Commands.Login;
 using LanguageBackend.Application.Features.Auth.Commands.Register;
-using LanguageBackend.Application.Features.Auth.Commands.UpdateUser;
+
 using LanguageBackend.Application.Features.Auth.Commands.VerifyEmail;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -65,43 +65,8 @@ namespace LanguageBackend.WebAPI.Controllers
             return Ok(new { token = result });
         }
 
-        [Authorize] // Önce Anahtarın (Token) var mı kontrolü yap
-        [HttpPut("update-profile")]
-        public async Task<IActionResult> UpdateProfile(UpdateUserCommand command)
-        {
-            //  Token içine gomdugumuz ıd bılgısını aldık 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
 
-            //  Okuduğun ID'yi paketin (Command) içine yerleştir
-            command.UserId = userId;
-
-            //  Paketi MediatR ile Handler'a gönder
-            var result = await _mediator.Send(command);
-
-            if (result)
-                return Ok(new { message = "Profiliniz güncellendi." });
-
-            return BadRequest(new { message = "Güncelleme başarısız." });
-        }
-
-        [Authorize]
-        [HttpDelete("delete-profile")]
-        public async Task<IActionResult> DeleteUser()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized(new { message = "Kullanıcı kimliği doğrulanamadı." });
-
-
-            var command = new DeleteUserCommand { UserId = userId };
-
-            var result = await _mediator.Send(command);
-            if (result)
-            {
-                return Ok(new { message = "Hesabınız başarıyla silindi." });
-            }
-            return BadRequest(new { message = "Kullanıcı silme işlemi sırasında bir hata oluştu." });
-        }
+       
     }
 }

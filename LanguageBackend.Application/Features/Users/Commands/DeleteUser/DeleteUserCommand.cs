@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace LanguageBackend.Application.Features.Auth.Commands.DeleteUser
+namespace LanguageBackend.Application.Features.Users.Commands.DeleteUser
 {
     public class DeleteUserCommand : IRequest<bool>
     {

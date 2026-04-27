@@ -1,9 +1,8 @@
-﻿using LanguageBackend.Application.Features.Auth.Commands.UpdateUser;
-using LanguageBackend.Domain.Entities;
+﻿using LanguageBackend.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace LanguageBackend.Application.Features.Auth.Commands
+namespace LanguageBackend.Application.Features.Users.Commands.UpdateUser
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, bool>
     {

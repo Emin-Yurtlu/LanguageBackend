@@ -1,4 +1,4 @@
-﻿using LanguageBackend.Domain.Enum; 
+﻿using LanguageBackend.Domain.Enum;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace LanguageBackend.Application.Features.Auth.Commands.UpdateUser
+namespace LanguageBackend.Application.Features.Users.Commands.UpdateUser
 {
     public class UpdateUserCommand : IRequest<bool>
     {

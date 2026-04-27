@@ -20,34 +20,41 @@ namespace LanguageBackend.Application.Features.Word.Queries.GetWord
 
         public async Task<GetWordResult> Handle(GetWordQuery request, CancellationToken cancellationToken)
         {
-            // Kullanıcının daha önce gördüğü kelimeleri çek
-            var seenWords = await _userWordRepository.GetSeenWordsByUserIdAsync(request.UserId);
-
             // Kullanıcının seviyesini çek
             var user = await _userManager.FindByIdAsync(request.UserId);
             var level = user?.Level.ToString() ?? "B1";
 
-            // Gemini'den daha önce görülmemiş kelime iste
-            var (englishWord, turkishMeaning) = await _geminiService.GetNewWordAsync(level, seenWords);
+            // Gemini'den kelime iste
+            var (englishWord, turkishMeaning) = await _geminiService.GetNewWordAsync(level, new List<string>());
 
-            // Kelimeyi otomatik kaydet
-            var userWord = new UserWord
-            {
-                UserId = request.UserId,
-                EnglishWord = englishWord,
-                TurkishMeaning = turkishMeaning,
-                IsLearned = false,
-                SeenAt = DateTime.UtcNow
-            };
-
-            await _userWordRepository.AddWordAsync(userWord);
-            await _userWordRepository.SaveChangesAsync();
-
-            return new GetWordResult
+            // Kullanıcıya hemen döndür — kayıt işlemini bekleme
+            var result = new GetWordResult
             {
                 EnglishWord = englishWord,
                 TurkishMeaning = turkishMeaning
             };
+
+            // Arka planda kaydet — kullanıcı beklemez
+            _ = Task.Run(async () =>
+            {
+                var exists = await _userWordRepository.ExistsAsync(request.UserId, englishWord);
+                if (!exists)
+                {
+                    var userWord = new UserWord
+                    {
+                        UserId = request.UserId,
+                        EnglishWord = englishWord,
+                        TurkishMeaning = turkishMeaning,
+                        IsLearned = false,
+                        SeenAt = DateTime.UtcNow
+                    };
+
+                    await _userWordRepository.AddWordAsync(userWord);
+                    await _userWordRepository.SaveChangesAsync();
+                }
+            });
+
+            return result;
         }
     }
 }

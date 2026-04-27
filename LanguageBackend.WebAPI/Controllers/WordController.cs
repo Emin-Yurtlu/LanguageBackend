@@ -1,4 +1,5 @@
 ﻿using LanguageBackend.Application.Features.Word.Commands.SubmitAnswer;
+using LanguageBackend.Application.Features.Word.Queries.GetLearnedWords;
 using LanguageBackend.Application.Features.Word.Queries.GetWord;
 using LanguageBackend.Application.Features.Word.Queries.StartQuiz;
 using MediatR;
@@ -62,6 +63,42 @@ namespace LanguageBackend.WebAPI.Controllers
             command.UserId = userId;
 
             var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpGet("learned-words")]
+        public async Task<IActionResult> GetLearnedWords()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { message = "Kullanıcı kimliği doğrulanamadı." });
+
+            var result = await _mediator.Send(new GetLearnedWordsQuery { UserId = userId });
+            return Ok(result);
+        }
+
+        [HttpGet("not-learned-words")]
+        public async Task<IActionResult> GetNotLearnedWords()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { message = "Kullanıcı kimliği doğrulanamadı." });
+
+            var result = await _mediator.Send(new GetNotLearnedWordsQuery { UserId = userId });
+            return Ok(result);
+        }
+
+        [HttpGet("all-words")]
+        public async Task<IActionResult> GetAllWords()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { message = "Kullanıcı kimliği doğrulanamadı." });
+
+            var result = await _mediator.Send(new GetAllWordsQuery { UserId = userId });
             return Ok(result);
         }
     }

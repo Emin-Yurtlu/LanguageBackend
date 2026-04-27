@@ -51,5 +51,32 @@ namespace LanguageBackend.Persistence.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> ExistsAsync(string userId, string englishWord)
+        {
+            return await _context.UserWords
+                .AnyAsync(x => x.UserId == userId && x.EnglishWord.ToLower() == englishWord.ToLower());
+        }
+
+        public async Task<List<UserWord>> GetLearnedWordsByUserIdAsync(string userId)
+        {
+            return await _context.UserWords
+                .Where(x => x.UserId == userId && x.IsLearned)
+                .ToListAsync();
+        }
+        public async Task<List<UserWord>> GetNotLearnedWordsByUserIdAsync(string userId)
+        {
+            return await _context.UserWords
+                .Where(x => x.UserId == userId && x.IsLearned==false)
+                .ToListAsync();
+        }
+
+        public async Task<List<UserWord>> GetAllWordsByUserIdAsync(string userId)
+        {
+            return await _context.UserWords
+                .Where(x => x.UserId == userId )
+                .ToListAsync();
+        }
+
+
     }
 }

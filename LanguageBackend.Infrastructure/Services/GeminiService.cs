@@ -27,12 +27,10 @@ namespace LanguageBackend.Infrastructure.Services
                 : "";
 
             var prompt = $@"
-                Sen bir İngilizce öğretmenisin.
-                {level} seviyesine uygun, günlük hayatta kullanılan tek bir İngilizce kelime ver.
-                {excludedList}
-                Sadece JSON formatında yanıt ver, başka hiçbir şey yazma:
-                {{""english"": ""kelime"", ""turkish"": ""türkçe anlamı""}}";
-
+    Sen bir İngilizce öğretmenisin.
+    {level} seviyesine uygun, günlük hayatta kullanılan tek bir İngilizce kelime ver.
+    Sadece JSON formatında yanıt ver, başka hiçbir şey yazma:
+    {{""english"": ""kelime"", ""turkish"": ""türkçe anlamı""}}";
             // Gemini API istek gövdesi
             var requestBody = new
             {
