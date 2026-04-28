@@ -13,6 +13,7 @@ using System.Text;
 using LanguageBackend.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddLogging();
 
 // appsettıng json dosyasındas yazdıgımız verı tabanı baglantı cumlesının  verı tabanı ıle koprusunu sagladık 
 builder.Services.AddDbContext<AppDbContext>(options =>

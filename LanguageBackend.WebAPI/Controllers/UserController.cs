@@ -1,4 +1,5 @@
-﻿using LanguageBackend.Application.Features.Users.Commands.DeleteUser;
+﻿using LanguageBackend.Application.Features.Users.Commands.ChangePassword;
+using LanguageBackend.Application.Features.Users.Commands.DeleteUser;
 using LanguageBackend.Application.Features.Users.Commands.UpdateUser;
 using LanguageBackend.Application.Features.Users.Oueries.GetUser;
 using MediatR;
@@ -76,6 +77,25 @@ namespace LanguageBackend.WebAPI.Controllers
                 return NotFound(new { message = "Kullanıcı bulunamadı." });
 
             return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { message = "Kullanıcı kimliği doğrulanamadı." });
+
+            command.UserId = userId;
+
+            var result = await _mediator.Send(command);
+
+            if (result)
+                return Ok(new { message = "Şifreniz başarıyla değiştirildi." });
+
+            return BadRequest(new { message = "Şifre değiştirme başarısız. Eski şifrenizi kontrol edin." });
         }
     }
 }
