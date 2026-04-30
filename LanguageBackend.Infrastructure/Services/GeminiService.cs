@@ -80,6 +80,9 @@ namespace LanguageBackend.Infrastructure.Services
 
             var json = JsonSerializer.Serialize(requestBody);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // Model isminin başında "models/" olup olmadığını kontrol eden güvenli yapı
+            var modelPath = _model.StartsWith("models/") ? _model : $"models/{_model}";
+            // v1beta yerine v1 kullanarak dene
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/{_model.Trim()}:generateContent?key={_apiKey}";
 
             var response = await _httpClient.PostAsync(url, content);

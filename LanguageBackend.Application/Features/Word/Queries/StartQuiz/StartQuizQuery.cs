@@ -7,5 +7,6 @@ namespace LanguageBackend.Application.Features.Word.Queries.StartQuiz
     {
         [System.Text.Json.Serialization.JsonIgnore]
         public string UserId { get; set; } = string.Empty;
+       
     }
 }

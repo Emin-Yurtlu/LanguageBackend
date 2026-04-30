@@ -17,7 +17,9 @@ namespace LanguageBackend.Application.Features.Word.Queries.StartQuiz
             // Kullanıcının henüz öğrenmediği kelimeler → bunlar sorular olacak
             var unlearned = await _userWordRepository.GetUnlearnedWordsByUserIdAsync(request.UserId);
 
-            if (!unlearned.Any())
+            var selectedWords = unlearned.OrderBy(_ => Guid.NewGuid()).Take(10).ToList();
+
+            if (!selectedWords.Any())
                 return new List<QuizQuestionResult>();
 
             // Yanlış şıklar için → öğrenilmiş kelimelerden çek
@@ -26,7 +28,7 @@ namespace LanguageBackend.Application.Features.Word.Queries.StartQuiz
             var questions = new List<QuizQuestionResult>();
             var random = new Random();
 
-            foreach (var word in unlearned)
+            foreach (var word in selectedWords)
             {
                 // Yanlış şık adayları
                 var wrongOptions = wrongPool
@@ -38,7 +40,7 @@ namespace LanguageBackend.Application.Features.Word.Queries.StartQuiz
                 // Yanlış şık yetmezse öğrenilmemiş kelimelerden tamamla
                 if (wrongOptions.Count < 3)
                 {
-                    var extra = unlearned
+                    var extra = selectedWords
                         .Where(x => x.Id != word.Id && !wrongOptions.Contains(x.TurkishMeaning))
                         .OrderBy(_ => random.Next())
                         .Take(3 - wrongOptions.Count)
