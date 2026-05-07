@@ -18,6 +18,10 @@ namespace LanguageBackend.Domain.Entities
 
         public string LastName { get; set; } = string.Empty;
 
+     
         public EnglishLevel Level { get; set; }
+
+        public string? VerificationCode { get; set; }
+        public DateTime? VerificationCodeExpiry { get; set; }
     }
 }
