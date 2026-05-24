@@ -68,6 +68,17 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers(); // end poıntler controllar uzerınden yazılacak 
 
+// CORS Ayarları (Frontend'in Backend'e erişebilmesi için)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddScoped<IUserWordRepository, UserWordRepository>();
 
 builder.Services.AddEndpointsApiExplorer();// swager aktıf edıldı 
@@ -110,6 +121,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
+app.UseCors("AllowAll"); // CORS politikasını aktifleştir
 app.UseAuthentication(); // kullanıcı kımlıgını dogrular bu kullanıcı kım sorunun cevabı 
 app.UseAuthorization();// yetkı kontrolu yaparız  bu kullanıcı bura gırebılır mı 
 

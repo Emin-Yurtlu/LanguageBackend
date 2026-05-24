@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - WordFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .progress-container {
+            flex: 1;
+            margin-right: 24px;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral);
+            margin-bottom: 8px;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: var(--neutral-light);
+            border-radius: 4px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .score-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .question-area {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .question-word {
+            font-size: 36px;
+            font-family: var(--font-heading);
+            margin: 16px 0;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .option-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .option-btn.correct {
+            background: var(--success-light);
+            border-color: var(--success);
+            color: var(--success);
+        }
+        .option-btn.wrong {
+            background: var(--danger-light);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .option-btn:disabled {
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                </div>
+                <div>
+                    <div class="logo-text">WordFlow</div>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">Ana Sayfa</a></li>
+                <li><a href="words.html" class="nav-link">Kelimeler</a></li>
+                <li><a href="quiz-start.html" class="nav-link active">Quiz</a></li>
+                <li><a href="profile.html" class="nav-link">Profil</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1 class="page-title" style="text-align: center; width: 100%;">Quiz</h1>
+            </header>
+
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <span id="questionCount">Soru 1/10</span>
+                            <span id="progressPercent">10%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progressBar" style="width: 10%;"></div>
+                        </div>
+                    </div>
+                    <div class="score-badge">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <span id="scoreText">0</span>
+                    </div>
+                </div>
+
+                <div class="question-area">
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <span class="tag-badge tag-blue" id="wordType" style="margin-bottom: 16px;">Yükleniyor...</span>
+                        
+                        <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:24px; margin-top:16px;">
+                            <h2 id="wordText" style="font-size: 40px; margin: 0;">Yükleniyor...</h2>
+                            <button class="speak-btn" onclick="App.speakWord(document.getElementById('wordText').innerText, event)" title="Dinle">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-grid" id="optionsGrid">
+                    <!-- Options injected here -->
+                </div>
+
+                <div style="text-align: right;">
+                    <button class="btn btn-primary" id="nextBtn" style="width: auto; padding: 12px 32px; border-radius: 24px; display: none;" onclick="nextQuestion()">
+                        Sonraki <span style="margin-left: 8px;">&rarr;</span>
+                    </button>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let questions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let selectedWordId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!App.getToken()) {
+                window.location.href = 'index.html';
+                return;
+            }
+            try {
+                // Quiz başlat (backend'den 10 soru gelmeli)
+                const data = await App.apiCall('/Word/start-quiz');
+                if(data.message) {
+                    alert(data.message);
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                questions = data;
+                if(questions.length > 0) {
+                    showQuestion();
+                } else {
+                    alert("Şu an quiz için yeterli kelime yok!");
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Quiz başlatılamadı.");
+            }
+        });
+
+        function showQuestion() {
+            if (currentIndex >= questions.length) {
+                // Quiz bitti
+                sessionStorage.setItem('quizScore', score);
+                sessionStorage.setItem('quizTotal', questions.length);
+                window.location.href = 'quiz-result.html';
+                return;
+            }
+
+            const q = questions[currentIndex];
+            selectedWordId = q.userWordId;
+            
+            document.getElementById('questionCount').innerText = `Soru ${currentIndex + 1}/${questions.length}`;
+            const percent = Math.round(((currentIndex + 1) / questions.length) * 100);
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            
+            document.getElementById('wordType').innerText = q.level || 'Kelime';
+            document.getElementById('wordText').innerText = q.englishWord;
+
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            document.getElementById('nextBtn').style.display = 'none';
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(btn, opt);
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        async function selectOption(selectedBtn, selectedText) {
+            // Tüm butonları inaktif yap
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.disabled = true);
+
+            try {
+                // Submit answer to backend
+                const result = await App.apiCall('/Word/submit-answer', 'POST', {
+                    userWordId: selectedWordId,
+                    selectedAnswer: selectedText
+                });
+
+                if (result.isCorrect) {
+                    selectedBtn.classList.add('correct');
+                    selectedBtn.innerHTML += `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    score += 100;
+                    document.getElementById('scoreText').innerText = score;
+                } else {
+                    selectedBtn.classList.add('wrong');
+                    selectedBtn.innerHTML += `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+                    
+                    // Doğruyu bulup işaretle
+                    const q = questions[currentIndex];
+                    // Normalde backend doğru cevabı da dönmeli ama dönmüyorsa bilemeyiz.
+                    // Tasarımda doğru cevap gösteriliyordu. 
+                }
+
+                document.getElementById('nextBtn').style.display = 'inline-flex';
+
+            } catch (error) {
+                console.error(error);
+                alert("Cevap gönderilemedi.");
+            }
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            showQuestion();
+        }
+    </script>
+</body>
+</html>

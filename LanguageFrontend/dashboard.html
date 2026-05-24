@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa - WordFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="logo-text">WordFlow</div>
+                    <div class="logo-subtext">Öğrenmeye Devam Et</div>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link active">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Ana Sayfa
+                </a></li>
+                <li><a href="words.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    Kelimeler
+                </a></li>
+                <li><a href="quiz-start.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    Quiz
+                </a></li>
+                <li><a href="game-match.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Oyunlar
+                </a></li>
+                <li><a href="profile.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Profil
+                </a></li>
+            </ul>
+
+            <div style="margin-top: auto;">
+                <button class="nav-link" style="width:100%; border:none; background:transparent; cursor:pointer;" onclick="App.logout()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Çıkış Yap
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1 class="page-title">Ana Sayfa</h1>
+                <div class="topbar-right">
+                    <div class="user-greeting" id="userGreeting">Hoş geldin, Yükleniyor...</div>
+
+                    <div class="user-avatar" id="userAvatar">A</div>
+                </div>
+            </header>
+
+            <!-- Dashboard Banner Image -->
+            <div style="width: 100%; height: 160px; border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 32px; position: relative; box-shadow: var(--shadow-sm);">
+                <img src="img/dashboard_bg.png" alt="Dashboard Banner" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 0;">
+                <div style="position: absolute; top:0; left:0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 100%); z-index: 1;"></div>
+                <div style="position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 40px;">
+                    <h2 style="color: white; font-size: 26px; margin-bottom: 8px; font-family: var(--font-heading); font-weight: 800; letter-spacing: -0.5px;">Öğrenmeye Devam Et!</h2>
+                    <p style="color: rgba(255,255,255,0.85); font-size: 15px; font-weight: 500;">Her gün yeni bir kelime öğrenerek hedeflerine bir adım daha yaklaş.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                        Toplam Kelime
+                    </div>
+                    <div class="stat-value skeleton" id="statTotal" style="width: fit-content; min-width: 40px;">00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        Öğrenilen Kelimeler
+                    </div>
+                    <div class="stat-value skeleton" id="statLearned" style="width: fit-content; min-width: 40px;">00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--tertiary)" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        Öğrenilmemiş Kelimeler
+                    </div>
+                    <div class="stat-value skeleton" id="statUnlearned" style="width: fit-content; min-width: 40px;">00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        Öğrenme Oranı
+                    </div>
+                    <div class="stat-value skeleton" id="statRate" style="width: fit-content; min-width: 60px;">%00</div>
+                    <div style="width: 100%; height: 4px; background: var(--neutral-light); border-radius: 2px; margin-top: 8px;">
+                        <div id="statProgressBar" style="width: 0%; height: 100%; background: var(--primary); border-radius: 2px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Günün Kelimesi -->
+                <div class="word-of-day-card">
+                    <div style="color: var(--secondary); font-weight: 700; font-size: 13px; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                        Günün Kelimesi
+                    </div>
+                    <span class="tag-badge tag-blue" id="wodLevel">Yükleniyor...</span>
+                    
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 24px; margin-top: 16px;">
+                        <h1 id="wodText" style="font-size: 48px; letter-spacing: -1px; margin: 0;">Yükleniyor...</h1>
+                        <button class="speak-btn" onclick="App.speakWord(document.getElementById('wodText').innerText, event)" title="Dinle">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                        </button>
+                    </div>
+                    
+                    <div style="font-size: 13px; color: var(--neutral); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Anlamı</div>
+                    <h3 style="font-size: 24px; margin-bottom: 16px;" id="wodMeaning">...</h3>
+                    
+                    <div style="background: var(--neutral-light); padding: 16px; border-radius: var(--radius-md); margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px;">
+                        <div id="wodExample" style="font-style: italic; color: var(--text-dark);">"..."</div>
+                        <div id="wodExampleTr" style="font-size: 13px; color: var(--neutral); font-weight: 500;">...</div>
+                    </div>
+
+                    <button id="fetchWordBtn" class="btn btn-primary" style="width: auto; padding: 12px 32px; border-radius: 24px;" onclick="fetchWordOfDay()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+                        Yeni Kelime Getir
+                    </button>
+                </div>
+
+                <!-- Son Eklenenler -->
+                <div class="recent-words-list">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h3 style="font-size: 18px;">Son Eklenenler</h3>
+                        <a href="words.html" style="color: var(--primary);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
+                    <div id="recentWordsContainer">
+                        <div class="recent-item skeleton" style="height: 64px; margin-bottom: 8px;"></div>
+                        <div class="recent-item skeleton" style="height: 64px; margin-bottom: 8px;"></div>
+                        <div class="recent-item skeleton" style="height: 64px;"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!App.getToken()) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Onboarding (İlk Kayıt Turu) Kontrolü
+            if (localStorage.getItem('onboardingDone') !== 'true') {
+                App.startOnboarding();
+            } else {
+                // Sadece daha önceden girenler için kısa karşılama
+                setTimeout(() => {
+                    App.showLexiMessage("Kelime kütüphaneni büyütmeye devam et! Ben buralardayım. 🦊");
+                }, 1000);
+            }
+
+            try {
+                // 1. Kullanıcı bilgilerini çek
+                const user = await App.apiCall('/User/get-user');
+                document.getElementById('userGreeting').innerText = `Hoş geldin, ${user.firstName}!`;
+                document.getElementById('userAvatar').innerText = user.firstName.charAt(0).toUpperCase();
+                
+                // Seviye integer gelirse (0=A1, 3=B2 vs) veya string gelirse diye kontrol ediyoruz
+                const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
+                const userLevelStr = (typeof user.level === 'number') ? levels[user.level] : user.level;
+                document.getElementById('wodLevel').innerText = `${userLevelStr || 'Bilinmeyen'} SEVİYESİ`;
+
+                // 2. İstatistikler için kelimeleri çek
+                const learned = await App.apiCall('/Word/learned-words');
+                const unlearned = await App.apiCall('/Word/not-learned-words');
+                const allWords = await App.apiCall('/Word/all-words');
+
+                const total = allWords.length;
+                const learnedCount = learned.length;
+                const unlearnedCount = unlearned.length;
+                const rate = total === 0 ? 0 : Math.round((learnedCount / total) * 100);
+
+                const elTotal = document.getElementById('statTotal');
+                const elLearned = document.getElementById('statLearned');
+                const elUnlearned = document.getElementById('statUnlearned');
+                const elRate = document.getElementById('statRate');
+
+                elTotal.classList.remove('skeleton');
+                elLearned.classList.remove('skeleton');
+                elUnlearned.classList.remove('skeleton');
+                elRate.classList.remove('skeleton');
+
+                elTotal.innerText = total;
+                elLearned.innerText = learnedCount;
+                elUnlearned.innerText = unlearnedCount;
+                elRate.innerText = `%${rate}`;
+                document.getElementById('statProgressBar').style.width = `${rate}%`;
+
+                // 3. Son eklenenleri (veya hepsi listesinin son 4'ünü) göster
+                const recentContainer = document.getElementById('recentWordsContainer');
+                recentContainer.innerHTML = '';
+                
+                if (allWords.length > 0) {
+                    const recentWords = allWords.slice(-4).reverse(); // Son 4
+                    recentWords.forEach(word => {
+                        recentContainer.innerHTML += `
+                            <div class="recent-item">
+                                <div>
+                                    <div style="font-weight: 600; font-size: 15px; color: var(--text-dark); display: flex; align-items: center;">
+                                        ${word.englishWord || word.wordText || ''}
+                                        <button class="speak-btn" style="padding:4px; margin-left:8px;" onclick="App.speakWord('${word.englishWord || word.wordText || ''}', event)" title="Dinle">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                        </button>
+                                        <span class="tag-badge tag-orange" style="font-size: 9px; padding: 2px 6px; margin-left: 8px;">${word.level || ''}</span>
+                                    </div>
+                                    <div style="font-size: 12px; color: var(--neutral); margin-top: 4px;">${word.turkishMeaning || word.meaning || ''}</div>
+                                </div>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--neutral)" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        `;
+                    });
+                } else {
+                    recentContainer.innerHTML = '<div style="color: var(--neutral); font-size: 13px;">Henüz kelime yok.</div>';
+                }
+
+                // 4. Günün kelimesi (Otomatik getirmeyi kapattık)
+                document.getElementById('wodText').innerText = "Hazır mısın?";
+                document.getElementById('wodMeaning').innerText = "Öğrenmek için tıkla";
+                document.getElementById('wodExample').innerText = `"Yeni bir kelime üretmek için aşağıdaki butona basın."`;
+                document.getElementById('wodExampleTr').innerText = "";
+                document.getElementById('wodLevel').innerText = "BEKLENİYOR";
+
+            } catch (error) {
+                console.error("Dashboard error:", error);
+                if (error.message.includes('Unauthorized') || error.message.includes('kimlik')) {
+                    App.logout();
+                }
+            }
+        });
+
+        async function fetchWordOfDay() {
+            const btn = document.getElementById('fetchWordBtn');
+            const originalText = btn.innerHTML;
+            
+            try {
+                // UI'ı bekleme moduna al
+                btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin" style="margin-right: 8px;"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Yükleniyor...`;
+                btn.disabled = true;
+                
+                document.getElementById('wodText').innerText = "Üretiliyor...";
+                document.getElementById('wodMeaning').innerText = "Lütfen bekleyin...";
+                document.getElementById('wodExample').innerText = "...";
+                document.getElementById('wodExampleTr').innerText = "Çevirisi yükleniyor...";
+                
+                // Seviyeyi kullanıcı objesinden tekrar almak yerine butondan önce ayarlanan wodLevel'i koruyabiliriz 
+                // ya da yeniden çekebiliriz. Şu an backend API'yi çağırıyoruz.
+                const word = await App.apiCall('/Word/get-word');
+                
+                document.getElementById('wodText').innerText = word.englishWord || word.wordText || 'Bilinmiyor';
+                document.getElementById('wodMeaning').innerText = word.turkishMeaning || word.meaning || 'Anlam bulunamadı';
+                document.getElementById('wodExample').innerText = `"${word.exampleSentence || 'Örnek cümle bulunamadı.'}"`;
+                document.getElementById('wodExampleTr').innerText = word.exampleSentenceTr || '';
+                
+                // Seviyeyi başarıyla getirdikten sonra tekrar kullanıcının seviyesine çek (yukarıda yapıldığı gibi)
+                const themeThemeStr = localStorage.getItem('userLevelCache') || document.getElementById('wodLevel').innerText;
+                if(document.getElementById('wodLevel').innerText === "BEKLENİYOR") {
+                    document.getElementById('wodLevel').innerText = "YENİ KELİME";
+                }
+                
+            } catch (error) {
+                document.getElementById('wodText').innerText = "Hata";
+                document.getElementById('wodMeaning').innerText = error.message || "Kelime alınamadı.";
+            } finally {
+                // Butonu eski haline getir
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

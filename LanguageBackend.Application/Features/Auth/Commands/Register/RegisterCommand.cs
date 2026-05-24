@@ -1,4 +1,4 @@
-﻿using LanguageBackend.Domain.Enum;
+using LanguageBackend.Domain.Enum;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace LanguageBackend.Application.Features.Auth.Commands.Register
     // bu sınıf commnads register sınıfıdır kullanıcı kayıt olurken ondan hangı bılgılerı alacagımızı buraya yazarız 
     // bu sınıfın <bool> olma sebebı  bu ıslem sonunda bıze true veya false dönmesını saglamaktır 
     // register handler sınıfı bır ıstek snıfıdır 
-    public class RegisterCommand:IRequest<bool>
+    public class RegisterCommand:IRequest<string>
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;

@@ -1,4 +1,4 @@
-﻿using LanguageBackend.Domain.Entities;
+using LanguageBackend.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -20,7 +20,7 @@ namespace LanguageBackend.Application.Features.Auth.Commands.VerifyEmail
             if (user == null) return false;
 
             // Kod eşleşiyor mu?
-            if (user.VerificationCode != request.Token)
+            if (user.VerificationCode != request.VerificationCode)
                 return false;
 
             // Kodun süresi dolmuş mu?

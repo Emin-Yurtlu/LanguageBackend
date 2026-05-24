@@ -1,4 +1,4 @@
-﻿using LanguageBackend.Application.Interfaces;
+using LanguageBackend.Application.Interfaces;
 using LanguageBackend.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +23,6 @@ namespace LanguageBackend.Application.Features.Word.Queries.GetWord
 
         public async Task<GetWordResult> Handle(GetWordQuery request, CancellationToken cancellationToken)
         {
-            // Kullanıcının seviyesini çek
             var user = await _userManager.FindByIdAsync(request.UserId);
 
             if (user == null)
@@ -31,34 +30,47 @@ namespace LanguageBackend.Application.Features.Word.Queries.GetWord
 
             var level = user.Level.ToString();
 
-            // Gemini'den kelime iste (sadece seviye gönder)
-            var (englishWord, turkishMeaning) = await _geminiService.GetNewWordAsync(level, new List<string>());
+            int maxAttempts = 5; // Sonsuz döngüyü önlemek için limit
+            var excludedWords = new List<string>();
 
-            // Veritabanında var mı kontrol et
-            var exists = await _userWordRepository.ExistsAsync(request.UserId, englishWord);
-
-            if (!exists)
+            for (int i = 0; i < maxAttempts; i++)
             {
-                // Yoksa kaydet
-                var userWord = new UserWord
-                {
-                    UserId = request.UserId,
-                    EnglishWord = englishWord,
-                    TurkishMeaning = turkishMeaning,
-                    IsLearned = false,
-                    SeenAt = DateTime.UtcNow
-                };
+                // Gemini'den kelime iste (excludedWords listesini de gönderiyoruz)
+                var (englishWord, turkishMeaning, exampleSentence, exampleSentenceTr) = await _geminiService.GetNewWordAsync(level, excludedWords);
 
-                await _userWordRepository.AddWordAsync(userWord);
-                await _userWordRepository.SaveChangesAsync();
+                // Veritabanında var mı kontrol et
+                var exists = await _userWordRepository.ExistsAsync(request.UserId, englishWord);
+
+                if (!exists)
+                {
+                    // Veritabanında YOKSA: Kaydet ve işlemi bitir
+                    var userWord = new UserWord
+                    {
+                        UserId = request.UserId,
+                        EnglishWord = englishWord,
+                        TurkishMeaning = turkishMeaning,
+                        IsLearned = false,
+                        SeenAt = DateTime.UtcNow
+                    };
+
+                    await _userWordRepository.AddWordAsync(userWord);
+                    await _userWordRepository.SaveChangesAsync();
+
+                    return new GetWordResult
+                    {
+                        EnglishWord = englishWord,
+                        TurkishMeaning = turkishMeaning,
+                        ExampleSentence = exampleSentence,
+                        ExampleSentenceTr = exampleSentenceTr
+                    };
+                }
+
+                // Veritabanında VARSA: Kelimeyi hariç tutulacaklar listesine ekle ve döngüye devam et
+                excludedWords.Add(englishWord);
             }
 
-            // Kullanıcıya döndür
-            return new GetWordResult
-            {
-                EnglishWord = englishWord,
-                TurkishMeaning = turkishMeaning
-            };
+            // 5 denemede de sürekli veritabanında olan bir kelime geldiyse
+            throw new Exception("Şu an için yeni bir kelime bulunamadı, lütfen tekrar deneyin.");
         }
     }
 }

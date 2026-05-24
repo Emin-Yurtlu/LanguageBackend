@@ -1,4 +1,4 @@
-﻿using LanguageBackend.Application.Interfaces;
+using LanguageBackend.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
@@ -22,7 +22,7 @@ namespace LanguageBackend.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<(string EnglishWord, string TurkishMeaning)> GetNewWordAsync(string level, List<string> excludedWords)
+        public async Task<(string EnglishWord, string TurkishMeaning, string ExampleSentence, string ExampleSentenceTr)> GetNewWordAsync(string level, List<string> excludedWords)
         {
             int maxRetries = 3;
             int retryCount = 0;
@@ -32,7 +32,8 @@ namespace LanguageBackend.Infrastructure.Services
             {
                 try
                 {
-                    return await FetchWordFromGeminiAsync(level);
+                    // excludedWords listesini Fetch metoduna geçiriyoruz
+                    return await FetchWordFromGeminiAsync(level, excludedWords);
                 }
                 catch (Exception ex)
                 {
@@ -56,13 +57,19 @@ namespace LanguageBackend.Infrastructure.Services
             throw new Exception("Gemini API'ye bağlanılamadı, lütfen tekrar deneyin.");
         }
 
-        private async Task<(string EnglishWord, string TurkishMeaning)> FetchWordFromGeminiAsync(string level)
+        // Metot imzasını güncelleyip excludedWords'ü alıyoruz
+        private async Task<(string EnglishWord, string TurkishMeaning, string ExampleSentence, string ExampleSentenceTr)> FetchWordFromGeminiAsync(string level, List<string> excludedWords)
         {
+            // Hariç tutulacak kelimeleri prompt'a eklemek için hazırlık
+            string excludedText = excludedWords != null && excludedWords.Any()
+                ? $"\nŞu kelimeleri KESİNLİKLE kullanma: {string.Join(", ", excludedWords)}."
+                : "";
+
             var prompt = $@"
     Sen bir İngilizce öğretmenisin.
-    {level} seviyesine uygun, günlük hayatta kullanılan tek bir İngilizce kelime ver.
+    {level} seviyesine uygun, günlük hayatta kullanılan tek bir İngilizce kelime ver.{excludedText}
     Sadece JSON formatında yanıt ver, başka hiçbir şey yazma:
-    {{""english"": ""kelime"", ""turkish"": ""türkçe anlamı""}}";
+    {{""english"": ""kelime"", ""turkish"": ""türkçe anlamı"", ""example"": ""ingilizce kısa bir örnek cümle"", ""exampleTr"": ""cümle çevirisi""}}";
 
             var requestBody = new
             {
@@ -80,9 +87,8 @@ namespace LanguageBackend.Infrastructure.Services
 
             var json = JsonSerializer.Serialize(requestBody);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            // Model isminin başında "models/" olup olmadığını kontrol eden güvenli yapı
+
             var modelPath = _model.StartsWith("models/") ? _model : $"models/{_model}";
-            // v1beta yerine v1 kullanarak dene
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/{_model.Trim()}:generateContent?key={_apiKey}";
 
             var response = await _httpClient.PostAsync(url, content);
@@ -123,12 +129,23 @@ namespace LanguageBackend.Infrastructure.Services
                 !wordRoot.TryGetProperty("turkish", out var turkishElement))
                 throw new Exception("Gemini geçersiz JSON formatı döndürdü.");
 
+            var example = string.Empty;
+            var exampleTr = string.Empty;
+            if (wordRoot.TryGetProperty("example", out var exampleElement))
+            {
+                example = exampleElement.GetString()!;
+            }
+            if (wordRoot.TryGetProperty("exampleTr", out var exampleTrElement))
+            {
+                exampleTr = exampleTrElement.GetString()!;
+            }
+
             var english = englishElement.GetString()!;
             var turkish = turkishElement.GetString()!;
 
-            _logger.LogInformation($"Kelime alındı: {english} = {turkish}");
+            _logger.LogInformation($"Kelime alındı: {english} = {turkish} | Örnek: {example} | Çeviri: {exampleTr}");
 
-            return (english, turkish);
+            return (english, turkish, example, exampleTr);
         }
     }
 }

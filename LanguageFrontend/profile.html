@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - WordFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .profile-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+        }
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 32px 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .profile-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            position: relative;
+        }
+        .profile-avatar-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--card-bg);
+            color: var(--neutral);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        .profile-info-list {
+            text-align: left;
+            margin-top: 24px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+        }
+        .profile-info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--neutral);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .stats-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .stat-small {
+            background: var(--neutral-light);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+        }
+        .tabs-header {
+            display: flex;
+            gap: 32px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--neutral);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                </div>
+                <div>
+                    <div class="logo-text">WordFlow</div>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">Ana Sayfa</a></li>
+                <li><a href="words.html" class="nav-link">Kelimeler</a></li>
+                <li><a href="quiz-start.html" class="nav-link">Quiz</a></li>
+                <li><a href="profile.html" class="nav-link active">Profil</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar" style="margin-bottom: 24px;">
+                <h1 class="page-title">Profil</h1>
+            </header>
+            <p style="color: var(--neutral); margin-bottom: 32px;">Kişisel bilgilerinizi ve hesap ayarlarınızı yönetin.</p>
+
+            <div style="width: 100%; height: 200px; border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 32px; position: relative; box-shadow: var(--shadow-sm);">
+                <img src="img/profile_cover.png" alt="Profile Cover" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+            </div>
+
+            <div class="profile-container">
+                <!-- Left Sidebar Profile -->
+                <div>
+                    <div class="profile-card" style="background: linear-gradient(180deg, rgba(255,107,53,0.1) 0%, var(--card-bg) 100px);">
+                        <div class="profile-avatar-large" id="avatarInitials">
+                            AD
+                            <div class="profile-avatar-edit">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            </div>
+                        </div>
+                        <h3 id="profileName" style="font-size: 20px; margin-bottom: 4px;">...</h3>
+                        <p id="profileUsername" style="color: var(--neutral); font-size: 14px; margin-bottom: 16px;">@...</p>
+                        
+                        <span class="tag-badge" id="profileLevel" style="background: #ffe4d6; color: var(--secondary);">... Seviye</span>
+
+                        <div class="profile-info-list">
+                            <div class="profile-info-item">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                <span id="profileEmail">...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-card" style="margin-top: 24px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--text-dark); margin-bottom: 16px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                            İstatistikler
+                        </div>
+                        <div class="stats-box">
+                            <div class="stat-small">
+                                <div style="color: var(--primary); font-size: 24px; font-weight: 700; font-family: var(--font-heading);" id="statStreak">0</div>
+                                <div style="font-size: 11px; color: var(--neutral); font-weight: 600;">Günlük Seri</div>
+                            </div>
+                            <div class="stat-small">
+                                <div style="color: var(--secondary); font-size: 24px; font-weight: 700; font-family: var(--font-heading);" id="statWordsLearned">0</div>
+                                <div style="font-size: 11px; color: var(--neutral); font-weight: 600;">Öğrenilen Kelime</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Form Area -->
+                <div class="profile-card" style="text-align: left;">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" onclick="switchTab('info')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            Bilgilerim
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('security')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            Şifre Değiştir
+                        </button>
+                    </div>
+
+                    <div id="tab-info" class="tab-content active">
+                        <div id="infoAlert" class="alert"></div>
+                        <form id="updateForm">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                <div class="form-group">
+                                    <label>Ad</label>
+                                    <input type="text" id="upFirstName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Soyad</label>
+                                    <input type="text" id="upLastName" class="form-control" required>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                <div class="form-group">
+                                    <label>Kullanıcı Adı</label>
+                                    <input type="text" id="upUserName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Seviye</label>
+                                    <select id="upLevel" class="form-control">
+                                        <option value="A1">A1</option>
+                                        <option value="A2">A2</option>
+                                        <option value="B1">B1</option>
+                                        <option value="B2">B2</option>
+                                        <option value="C1">C1</option>
+                                        <option value="C2">C2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="text-align: right; margin-top: 16px;">
+                                <button type="button" class="btn btn-outline" style="width: auto; padding: 12px 24px; margin-right: 12px;">İptal</button>
+                                <button type="submit" class="btn btn-primary" style="width: auto; padding: 12px 24px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                    Kaydet
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--border-color);">
+                        
+                        <div>
+                            <h4 style="color: var(--danger); margin-bottom: 8px;">Hesabı Sil</h4>
+                            <p style="color: var(--neutral); font-size: 13px; margin-bottom: 16px;">Hesabınızı sildiğinizde tüm verileriniz kalıcı olarak silinir.</p>
+                            <button onclick="deleteAccount()" class="btn" style="background: var(--danger-light); color: var(--danger); width: auto; padding: 10px 20px;">Hesabımı Sil</button>
+                        </div>
+                    </div>
+
+                    <div id="tab-security" class="tab-content">
+                        <div id="pwdAlert" class="alert"></div>
+                        <form id="pwdForm">
+                            <div class="form-group" style="max-width: 400px;">
+                                <label>Eski Şifre</label>
+                                <input type="password" id="oldPwd" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="max-width: 400px;">
+                                <label>Yeni Şifre</label>
+                                <input type="password" id="newPwd" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="max-width: 400px;">
+                                <label>Yeni Şifre Tekrar</label>
+                                <input type="password" id="newPwdConfirm" class="form-control" required>
+                            </div>
+                            <div style="margin-top: 24px;">
+                                <button type="submit" class="btn btn-primary" style="width: auto; padding: 12px 24px;">Şifreyi Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.currentTarget.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!App.getToken()) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const user = await App.apiCall('/User/get-user');
+                
+                // Sol panel doldurma
+                document.getElementById('profileName').innerText = `${user.firstName} ${user.lastName}`;
+                document.getElementById('profileUsername').innerText = `@${user.userName}`;
+                document.getElementById('profileEmail').innerText = user.email;
+                document.getElementById('profileLevel').innerText = `${user.level} Seviye`;
+                document.getElementById('avatarInitials').childNodes[0].nodeValue = user.firstName.charAt(0) + user.lastName.charAt(0);
+                
+                // Form doldurma
+                document.getElementById('upFirstName').value = user.firstName;
+                document.getElementById('upLastName').value = user.lastName;
+                document.getElementById('upUserName').value = user.userName;
+                document.getElementById('upLevel').value = user.level;
+
+                // İstatistik
+                const learned = await App.apiCall('/Word/learned-words');
+                document.getElementById('statWordsLearned').innerText = learned.length;
+
+            } catch (error) {
+                console.error(error);
+            }
+        });
+
+        document.getElementById('updateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById('upFirstName').value;
+            const lastName = document.getElementById('upLastName').value;
+            const userName = document.getElementById('upUserName').value;
+            const level = document.getElementById('upLevel').value;
+
+            try {
+                await App.apiCall('/User/update-profile', 'PUT', { firstName, lastName, userName, level });
+                App.showSuccess('infoAlert', 'Profiliniz güncellendi.');
+                setTimeout(() => location.reload(), 1500);
+            } catch (error) {
+                App.showError('infoAlert', error.message);
+            }
+        });
+
+        document.getElementById('pwdForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const currentPassword = document.getElementById('oldPwd').value;
+            const newPassword = document.getElementById('newPwd').value;
+            const confirm = document.getElementById('newPwdConfirm').value;
+
+            if (newPassword !== confirm) {
+                App.showError('pwdAlert', 'Yeni şifreler eşleşmiyor!');
+                return;
+            }
+
+            try {
+                await App.apiCall('/User/change-password', 'PUT', { currentPassword, newPassword });
+                App.showSuccess('pwdAlert', 'Şifreniz değiştirildi.');
+                document.getElementById('pwdForm').reset();
+            } catch (error) {
+                App.showError('pwdAlert', error.message);
+            }
+        });
+
+        async function deleteAccount() {
+            if(confirm("Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz!")) {
+                try {
+                    await App.apiCall('/User/delete-profile', 'DELETE');
+                    App.logout();
+                } catch (error) {
+                    alert("Hesap silinirken hata oluştu.");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

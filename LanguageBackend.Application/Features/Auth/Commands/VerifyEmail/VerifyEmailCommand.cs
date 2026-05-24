@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace LanguageBackend.Application.Features.Auth.Commands.VerifyEmail
         // e maıl dogrulama kısmı ıcın bana kullanıcın e maıl ı ve e posta adresıne gonderılen tokanı olması yeterlı 
         public string Email { get; set; } = string.Empty;
 
-        public string Token { get; set; } = string.Empty;
+        public string VerificationCode { get; set; } = string.Empty;
 
     }
 }

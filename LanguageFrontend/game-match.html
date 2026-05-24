@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eşleştirme Oyunu - WordFlow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .stats-box {
+            display: flex;
+            gap: 24px;
+            background: var(--card-bg);
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--neutral);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            font-family: var(--font-heading);
+            color: var(--text-dark);
+        }
+        .match-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+            perspective: 1000px;
+        }
+        .match-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            padding: 8px;
+        }
+        .match-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-light);
+        }
+        .match-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            transform: scale(1.02);
+        }
+        .match-card.matched {
+            border-color: var(--success);
+            background: var(--success-light);
+            color: var(--success);
+            opacity: 0.5;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+        .match-card.error {
+            border-color: var(--danger);
+            background: var(--danger-light);
+            color: var(--danger);
+            animation: shake 0.4s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .game-over-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .game-over-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 48px;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            transform: scale(0.8);
+            transition: all 0.3s;
+            box-shadow: var(--shadow-md);
+        }
+        .game-over-modal.show .modal-content {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="logo-text">WordFlow</div>
+                    <div class="logo-subtext">Öğrenmeye Devam Et</div>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Ana Sayfa
+                </a></li>
+                <li><a href="words.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    Kelimeler
+                </a></li>
+                <li><a href="quiz-start.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    Quiz
+                </a></li>
+                <li><a href="game-match.html" class="nav-link active">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Oyunlar
+                </a></li>
+                <li><a href="profile.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Profil
+                </a></li>
+            </ul>
+            <div style="margin-top: auto;">
+                <button class="nav-link" style="width:100%; border:none; background:transparent; cursor:pointer;" onclick="App.logout()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Çıkış Yap
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1 class="page-title">Hafıza Eşleştirme</h1>
+                <div class="topbar-right">
+                    <div class="user-greeting" id="userGreeting">Hoş geldin!</div>
+                    <div class="user-avatar" id="userAvatar">A</div>
+                </div>
+            </header>
+
+            <div class="game-header">
+                <div>
+                    <h2 style="font-size: 24px; font-family: var(--font-heading);">Süreyi Yen!</h2>
+                    <p style="color: var(--neutral); font-size: 15px;">Kelimeleri anlamlarıyla olabildiğince hızlı eşleştir.</p>
+                </div>
+                <div class="stats-box">
+                    <div class="stat-item">
+                        <span class="stat-label">Süre</span>
+                        <span class="stat-value" id="timeDisplay" style="color: var(--primary);">60s</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Hata</span>
+                        <span class="stat-value" id="mistakeDisplay" style="color: var(--danger);">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="gameLoading" style="text-align: center; padding: 60px; color: var(--neutral);">
+                <img src="img/lexi_search.png" alt="Loading" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; box-shadow: var(--shadow-sm); margin-bottom: 24px; animation: shake 2s infinite;">
+                <br><span style="font-size: 16px; font-weight: 500;">Lexi kelimeleri hazırlıyor...</span>
+            </div>
+
+            <div class="match-grid" id="matchGrid" style="display: none;">
+                <!-- Cards will be injected here -->
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Game Over Modal -->
+    <div class="game-over-modal" id="gameOverModal">
+        <div class="modal-content">
+            <div id="modalIcon" style="margin-bottom: 24px;"></div>
+            <h2 id="modalTitle" style="font-size: 32px; margin-bottom: 12px;">Oyun Bitti!</h2>
+            <p id="modalDesc" style="color: var(--neutral); margin-bottom: 32px;">Sonucun hesaplanıyor...</p>
+            <button class="btn btn-primary" style="padding: 12px 32px; border-radius: 24px;" onclick="initGame()">Tekrar Oyna</button>
+            <button class="btn btn-outline" style="padding: 12px 32px; border-radius: 24px; margin-left: 12px;" onclick="window.location.href='dashboard.html'">Ana Sayfaya Dön</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let allWords = [];
+        let gameCards = [];
+        let firstSelection = null;
+        let secondSelection = null;
+        let mistakes = 0;
+        let matches = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let isGameRunning = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!App.getToken()) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const user = await App.apiCall('/User/get-user');
+                document.getElementById('userGreeting').innerText = `Hoş geldin, ${user.firstName}!`;
+                document.getElementById('userAvatar').innerText = user.firstName.charAt(0).toUpperCase();
+
+                // Tüm kelimeleri veya öğrenilenleri çek
+                let words = await App.apiCall('/Word/learned-words');
+                if (words.length < 6) {
+                    // Eğer öğrenilmiş 6 kelimesi yoksa, hepsinden çekelim (demo amaçlı)
+                    words = await App.apiCall('/Word/all-words');
+                }
+                
+                if (words.length < 6) {
+                    document.getElementById('gameLoading').innerHTML = "Bu oyunu oynamak için sistemde en az 6 kelime bulunmalıdır.";
+                    return;
+                }
+                
+                allWords = words;
+                initGame();
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('gameLoading').innerHTML = "Kelimeler yüklenirken hata oluştu.";
+            }
+        });
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initGame() {
+            document.getElementById('gameOverModal').classList.remove('show');
+            document.getElementById('gameLoading').style.display = 'none';
+            document.getElementById('matchGrid').style.display = 'grid';
+            
+            clearInterval(timerInterval);
+            timeLeft = 60;
+            mistakes = 0;
+            matches = 0;
+            firstSelection = null;
+            secondSelection = null;
+            isGameRunning = true;
+            
+            document.getElementById('timeDisplay').innerText = timeLeft + 's';
+            document.getElementById('mistakeDisplay').innerText = mistakes;
+
+            // Rastgele 6 kelime seç
+            shuffleArray(allWords);
+            const selectedWords = allWords.slice(0, 6);
+            
+            // Kartları oluştur (6 İngilizce, 6 Türkçe)
+            gameCards = [];
+            selectedWords.forEach(w => {
+                gameCards.push({ id: w.id, text: w.englishWord || w.wordText, type: 'en' });
+                gameCards.push({ id: w.id, text: w.turkishMeaning || w.meaning, type: 'tr' });
+            });
+            
+            shuffleArray(gameCards);
+            renderGrid();
+            
+            // Timer başlat
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timeDisplay').innerText = timeLeft + 's';
+                if (timeLeft <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('matchGrid');
+            grid.innerHTML = '';
+            
+            gameCards.forEach((card, index) => {
+                const div = document.createElement('div');
+                div.className = 'match-card';
+                div.innerText = card.text;
+                div.dataset.index = index;
+                div.dataset.id = card.id;
+                div.dataset.type = card.type;
+                
+                div.addEventListener('click', () => handleCardClick(div, card));
+                grid.appendChild(div);
+            });
+        }
+
+        function handleCardClick(cardElement, cardData) {
+            if (!isGameRunning) return;
+            if (cardElement.classList.contains('matched') || cardElement.classList.contains('selected')) return;
+            
+            // İlk kart seçimi
+            if (!firstSelection) {
+                firstSelection = { el: cardElement, data: cardData };
+                cardElement.classList.add('selected');
+                App.playClickSound(); // ufak bir tık sesi çalar
+                return;
+            }
+            
+            // Aynı karta iki kere tıklanırsa işlem yapma
+            if (firstSelection.el === cardElement) return;
+
+            // İkinci kart seçimi
+            secondSelection = { el: cardElement, data: cardData };
+            cardElement.classList.add('selected');
+            
+            // Kontrol et
+            checkMatch();
+        }
+
+        function checkMatch() {
+            const isMatch = (firstSelection.data.id === secondSelection.data.id) && (firstSelection.data.type !== secondSelection.data.type);
+            
+            if (isMatch) {
+                // Eşleşme Başarılı
+                firstSelection.el.classList.remove('selected');
+                secondSelection.el.classList.remove('selected');
+                
+                firstSelection.el.classList.add('matched');
+                secondSelection.el.classList.add('matched');
+                
+                // Lexi tepkisi (Doğru)
+                App.showLexiMessage("Harika eşleşme! Aynen böyle devam et.", false);
+
+                matches++;
+                if (matches === 6) {
+                    setTimeout(() => endGame(true), 300);
+                }
+                
+                firstSelection = null;
+                secondSelection = null;
+            } else {
+                // Eşleşme Hatalı
+                mistakes++;
+                document.getElementById('mistakeDisplay').innerText = mistakes;
+                
+                firstSelection.el.classList.add('error');
+                secondSelection.el.classList.add('error');
+
+                // Lexi tepkisi (Yanlış)
+                App.showLexiMessage("Dikkat et! Yanlış eşleşme.", true);
+                
+                const fSel = firstSelection;
+                const sSel = secondSelection;
+                
+                firstSelection = null;
+                secondSelection = null;
+
+                setTimeout(() => {
+                    fSel.el.classList.remove('selected', 'error');
+                    sSel.el.classList.remove('selected', 'error');
+                }, 400);
+            }
+        }
+
+        function endGame(isWin) {
+            isGameRunning = false;
+            clearInterval(timerInterval);
+            
+            const modal = document.getElementById('gameOverModal');
+            const icon = document.getElementById('modalIcon');
+            const title = document.getElementById('modalTitle');
+            const desc = document.getElementById('modalDesc');
+            
+            if (isWin) {
+                icon.innerHTML = `<img src="img/lexi_success.png" style="width: 120px; height: 120px; border-radius: 50%; box-shadow: var(--shadow-sm); border: 4px solid var(--success-light);">`;
+                title.innerText = "Tebrikler!";
+                title.style.color = "var(--success)";
+                desc.innerHTML = `Lexi çok sevindi! Süreyi yendin!<br><br>Kalan Süre: <b style="font-size:18px;">${timeLeft}s</b><br>Hata Sayısı: <b style="font-size:18px;">${mistakes}</b>`;
+            } else {
+                icon.innerHTML = `<img src="img/lexi_fail.png" style="width: 120px; height: 120px; border-radius: 50%; box-shadow: var(--shadow-sm); border: 4px solid var(--danger-light);">`;
+                title.innerText = "Süre Doldu!";
+                title.style.color = "var(--danger)";
+                desc.innerHTML = `Pes etmek yok, Lexi bir dahaki sefere başaracağına emin.<br><br>Hata Sayısı: <b style="font-size:18px;">${mistakes}</b>`;
+            }
+            
+            modal.classList.add('show');
+        }
+    </script>
+</body>
+</html>

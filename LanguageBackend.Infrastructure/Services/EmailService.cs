@@ -1,4 +1,4 @@
-﻿using LanguageBackend.Application.Interfaces;
+using LanguageBackend.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Net.Mail;
 using System.Net;
@@ -34,14 +34,15 @@ namespace LanguageBackend.Infrastructure.Services
 
 
             // smtp clint olusturm
-            var client = new SmtpClient(host, port)// hangı maıl sunucusuna baglanacaksın  host+port
+            using var client = new SmtpClient(host, port)// hangı maıl sunucusuna baglanacaksın  host+port
             {
+                UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(user, pass),//  NetworkCredential ıle gırıs bılgılerım 
                 EnableSsl = true// guvenlı baglantı kullanma 
             };
 
             // mail iceriği
-            var mailMessage = new MailMessage(from: user!, to: toEmail, subject, body)// kımden=userdan kıme=ToEmail konu=subject ıcerık=body
+            using var mailMessage = new MailMessage(from: user!, to: toEmail, subject, body)// kımden=userdan kıme=ToEmail konu=subject ıcerık=body
             {
                 IsBodyHtml = true // HTML formatında 
             };

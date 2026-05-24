@@ -1,22 +1,23 @@
-﻿using LanguageBackend.Application.Interfaces;
+using LanguageBackend.Application.Interfaces;
 using LanguageBackend.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LanguageBackend.Application.Features.Auth.Commands.Register
 {
-    public class RegisterCommadHandler : IRequestHandler<RegisterCommand, bool>
+    public class RegisterCommadHandler : IRequestHandler<RegisterCommand, string>
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IEmailService _emailService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public RegisterCommadHandler(UserManager<AppUser> userManager, IEmailService emailService)
+        public RegisterCommadHandler(UserManager<AppUser> userManager, IServiceScopeFactory serviceScopeFactory)
         {
             _userManager = userManager;
-            _emailService = emailService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public async Task<bool> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var user = new AppUser
             {
@@ -31,26 +32,37 @@ namespace LanguageBackend.Application.Features.Auth.Commands.Register
 
             if (result.Succeeded)
             {
-                // ✅ 6 haneli rastgele kod üret
                 var code = new Random().Next(100000, 999999).ToString();
-
-                // ✅ Kodu ve son geçerlilik tarihini kullanıcıya kaydet (15 dakika geçerli)
                 user.VerificationCode = code;
                 user.VerificationCodeExpiry = DateTime.UtcNow.AddMinutes(15);
                 await _userManager.UpdateAsync(user);
 
-                // ✅ E-postaya kodu gönder
-                var emailBody = $@"
-                    <h3>WordFlow'a Hoşgeldiniz!</h3>
-                    <p>E-posta doğrulama kodunuz:</p>
-                    <h1 style='letter-spacing: 8px; color: #6C63FF;'>{code}</h1>
-                    <p>Bu kod <strong>15 dakika</strong> geçerlidir.</p>";
+                var emailBody = $@"...{code}...";
+                var email = user.Email!;
 
-                await _emailService.SendEmailAsync(user.Email!, "WordFlow - E-Posta Doğrulama Kodu", emailBody);
-                return true;
+                // Arka planda mail gönderimi, kullanıcının kaydını bekletmez.
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        using var scope = _serviceScopeFactory.CreateScope();
+                        var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+                        await emailService.SendEmailAsync(email, "WordFlow - E-Posta Doğrulama Kodu", emailBody);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Hatayı görebilmemiz için geçici olarak masaüstüne yazdırıyoruz
+                        System.IO.File.WriteAllText(@"c:\Users\memin\Desktop\mail_error.txt", ex.ToString());
+                        Console.WriteLine($"Mail gönderilemedi: {ex.Message}");
+                    }
+                });
+
+                return ""; // Başarılıysa boş string döner
             }
 
-            return false;
+            // Hata varsa hataları birleştirip string olarak dönüyoruz
+            var errors = string.Join(" | ", result.Errors.Select(e => e.Description));
+            return errors;
         }
     }
 }

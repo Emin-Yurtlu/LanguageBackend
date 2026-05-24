@@ -1,4 +1,4 @@
-﻿
+
 using LanguageBackend.Application.Features.Auth.Commands.Login;
 using LanguageBackend.Application.Features.Auth.Commands.Register;
 
@@ -26,17 +26,15 @@ namespace LanguageBackend.WebAPI.Controllers
 
         //Kullanıcı kayıt kısmı 
         [HttpPost("register")]
-        //istekler registerCommand Uzerınden yapılacak 
         public async Task<IActionResult> Register(RegisterCommand command)
         {
-            //kullanıcı bılgılerı _mediatr  a verdık bu RegisterCommand>RegisterCommandHandler.. dıye gezecek
             var result = await _mediator.Send(command);
 
-
-            if (result)
+            if (string.IsNullOrEmpty(result))
                 return Ok(new { message = "Kayıt başarılı. Lütfen e-postanızı kontrol edin." });
 
-            return BadRequest(new { message = "Kayıt işlemi başarısız oldu." });
+            // result içinde hata mesajları var
+            return BadRequest(new { message = result });
         }
 
         // e posta dogrulama
